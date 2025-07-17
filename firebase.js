@@ -5,7 +5,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCjf9K9v8kMBa9SMZkkmjFOPL8ckFzT_zo",
   authDomain: "shieldnet-web.firebaseapp.com",
   projectId: "shieldnet-web",
-  storageBucket: "shieldnet-web.appspot.com",
+  storageBucket: "shieldnet-web.appspot.com", // ✅ تم تصحيحها
   messagingSenderId: "302819055337",
   appId: "1:302819055337:web:a24861946e176b40b7c278",
   measurementId: "G-3H9FXJF2CJ"
