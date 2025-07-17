@@ -1,114 +1,155 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة التحكم | ShieldNet</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      margin: 0; padding: 2rem;
-      color: #222;
-      text-align: center;
-    }
-    button {
-      background-color: #f39c12;
-      border: none;
-      padding: 0.8rem 2rem;
-      border-radius: 30px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      color: #222;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-      margin-top: 2rem;
-    }
-    button:hover {
-      background-color: #d78e10;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة التحكم | ShieldNet</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+  }
+  header {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+  p {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+  button {
+    background-color: #f39c12;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #222;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #d78e10;
+  }
+  select {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+  }
+</style>
 </head>
 <body>
+
+<header>
+  <select id="languageSelect" aria-label="اختيار اللغة">
+    <option value="ar">العربية</option>
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+  </select>
+</header>
+
+<main>
   <h1 id="welcomeText">مرحبًا بك في ShieldNet</h1>
   <p id="statusText">تم تسجيل الدخول بنجاح!</p>
   <button id="logoutBtn">تسجيل الخروج</button>
+</main>
 
-  <script type="module" src="firebase.js"></script>
-  <script type="module">
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<script type="module" src="firebase.js"></script>
+<script type="module">
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const auth = window.firebaseAuth;
-    const db = getFirestore();
+  const auth = window.firebaseAuth;
+  const db = getFirestore();
 
-    const welcomeText = document.getElementById("welcomeText");
-    const statusText = document.getElementById("statusText");
-    const logoutBtn = document.getElementById("logoutBtn");
+  const welcomeText = document.getElementById("welcomeText");
+  const statusText = document.getElementById("statusText");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const languageSelect = document.getElementById("languageSelect");
 
-    function applyLanguage(lang) {
-      if (lang === "en") {
-        document.documentElement.lang = "en";
-        document.documentElement.dir = "ltr";
-        welcomeText.textContent = "Welcome to ShieldNet";
-        statusText.textContent = "You are logged in successfully!";
-        logoutBtn.textContent = "Logout";
-      } else if (lang === "fr") {
-        document.documentElement.lang = "fr";
-        document.documentElement.dir = "ltr";
-        welcomeText.textContent = "Bienvenue sur ShieldNet";
-        statusText.textContent = "Connecté avec succès !";
-        logoutBtn.textContent = "Se déconnecter";
-      } else if (lang === "es") {
-        document.documentElement.lang = "es";
-        document.documentElement.dir = "ltr";
-        welcomeText.textContent = "Bienvenido a ShieldNet";
-        statusText.textContent = "¡Has iniciado sesión con éxito!";
-        logoutBtn.textContent = "Cerrar sesión";
-      } else if (lang === "de") {
-        document.documentElement.lang = "de";
-        document.documentElement.dir = "ltr";
-        welcomeText.textContent = "Willkommen bei ShieldNet";
-        statusText.textContent = "Sie sind erfolgreich angemeldet!";
-        logoutBtn.textContent = "Abmelden";
-      } else if (lang === "zh") {
-        document.documentElement.lang = "zh";
-        document.documentElement.dir = "ltr";
-        welcomeText.textContent = "欢迎来到ShieldNet";
-        statusText.textContent = "您已成功登录！";
-        logoutBtn.textContent = "登出";
-      } else {
-        // Arabic as default
-        document.documentElement.lang = "ar";
-        document.documentElement.dir = "rtl";
-        welcomeText.textContent = "مرحبًا بك في ShieldNet";
-        statusText.textContent = "تم تسجيل الدخول بنجاح!";
-        logoutBtn.textContent = "تسجيل الخروج";
-      }
+  const translations = {
+    ar: {
+      welcome: "مرحبًا بك في ShieldNet",
+      status: "تم تسجيل الدخول بنجاح!",
+      logout: "تسجيل الخروج"
+    },
+    en: {
+      welcome: "Welcome to ShieldNet",
+      status: "You are logged in successfully!",
+      logout: "Logout"
+    },
+    fr: {
+      welcome: "Bienvenue sur ShieldNet",
+      status: "Connecté avec succès !",
+      logout: "Se déconnecter"
+    }
+  };
+
+  function applyLanguage(lang) {
+    if (!translations[lang]) lang = "ar"; // افتراضي للعربية
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+
+    welcomeText.textContent = translations[lang].welcome;
+    statusText.textContent = translations[lang].status;
+    logoutBtn.textContent = translations[lang].logout;
+    languageSelect.value = lang;
+  }
+
+  // تحميل اللغة المختارة من بيانات المستخدم من Firestore
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
     }
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
+    try {
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
+      const lang = userSnap.exists() ? userSnap.data().language : "ar";
+      applyLanguage(lang);
+    } catch {
+      applyLanguage("ar");
+    }
+  });
 
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        const lang = data.language || "ar";
-        applyLanguage(lang);
-      } else {
-        applyLanguage("ar");
-      }
-    });
+  // تغيير اللغة من القائمة
+  languageSelect.addEventListener("change", (e) => {
+    applyLanguage(e.target.value);
+  });
 
-    logoutBtn.addEventListener("click", () => {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
+  // تسجيل الخروج
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
