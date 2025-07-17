@@ -4,11 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة التحكم | ShieldNet</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0; padding: 2rem;
+      color: #222;
+      text-align: center;
+    }
+    button {
+      background-color: #f39c12;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #222;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-top: 2rem;
+    }
+    button:hover {
+      background-color: #d78e10;
+    }
+  </style>
 </head>
 <body>
   <h1 id="welcomeText">مرحبًا بك في ShieldNet</h1>
   <p id="statusText">تم تسجيل الدخول بنجاح!</p>
-  <button onclick="logout()">تسجيل الخروج</button>
+  <button id="logoutBtn">تسجيل الخروج</button>
 
   <script type="module" src="firebase.js"></script>
   <script type="module">
@@ -20,38 +44,54 @@
 
     const welcomeText = document.getElementById("welcomeText");
     const statusText = document.getElementById("statusText");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    // تغيير النصوص حسب اللغة
     function applyLanguage(lang) {
       if (lang === "en") {
         document.documentElement.lang = "en";
         document.documentElement.dir = "ltr";
         welcomeText.textContent = "Welcome to ShieldNet";
         statusText.textContent = "You are logged in successfully!";
-        document.querySelector("button").textContent = "Logout";
+        logoutBtn.textContent = "Logout";
       } else if (lang === "fr") {
         document.documentElement.lang = "fr";
         document.documentElement.dir = "ltr";
         welcomeText.textContent = "Bienvenue sur ShieldNet";
         statusText.textContent = "Connecté avec succès !";
-        document.querySelector("button").textContent = "Se déconnecter";
+        logoutBtn.textContent = "Se déconnecter";
+      } else if (lang === "es") {
+        document.documentElement.lang = "es";
+        document.documentElement.dir = "ltr";
+        welcomeText.textContent = "Bienvenido a ShieldNet";
+        statusText.textContent = "¡Has iniciado sesión con éxito!";
+        logoutBtn.textContent = "Cerrar sesión";
+      } else if (lang === "de") {
+        document.documentElement.lang = "de";
+        document.documentElement.dir = "ltr";
+        welcomeText.textContent = "Willkommen bei ShieldNet";
+        statusText.textContent = "Sie sind erfolgreich angemeldet!";
+        logoutBtn.textContent = "Abmelden";
+      } else if (lang === "zh") {
+        document.documentElement.lang = "zh";
+        document.documentElement.dir = "ltr";
+        welcomeText.textContent = "欢迎来到ShieldNet";
+        statusText.textContent = "您已成功登录！";
+        logoutBtn.textContent = "登出";
       } else {
-        // Default: Arabic
+        // Arabic as default
         document.documentElement.lang = "ar";
         document.documentElement.dir = "rtl";
         welcomeText.textContent = "مرحبًا بك في ShieldNet";
         statusText.textContent = "تم تسجيل الدخول بنجاح!";
-        document.querySelector("button").textContent = "تسجيل الخروج";
+        logoutBtn.textContent = "تسجيل الخروج";
       }
     }
 
-    // التحقق من حالة المستخدم وجلب اللغة
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "login.html";
         return;
       }
-
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
@@ -64,12 +104,11 @@
       }
     });
 
-    // تسجيل الخروج
-    window.logout = function () {
+    logoutBtn.addEventListener("click", () => {
       signOut(auth).then(() => {
         window.location.href = "login.html";
       });
-    }
+    });
   </script>
 </body>
 </html>
