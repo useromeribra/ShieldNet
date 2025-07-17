@@ -1,167 +1,56 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>لوحة التحكم | ShieldNet</title>
-<style>
-  body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #4e54c8, #8f94fb);
-    margin: 0; padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    color: white;
-  }
-  header {
-    width: 100%;
-    background: rgba(0,0,0,0.5);
-    padding: 1rem 2rem;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  }
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 90%;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin-bottom: 0.5rem;
-  }
-  p {
-    margin-top: 0;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-  }
-  button {
-    background-color: #f39c12;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 30px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    color: #222;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  button:hover {
-    background-color: #d78e10;
-  }
-  select {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم | ShieldNet</title>
 </head>
 <body>
-
-<header>
-  <select id="languageSelect" aria-label="اختيار اللغة">
-    <option value="ar">العربية</option>
-    <option value="en">English</option>
-    <option value="fr">Français</option>
-  </select>
-</header>
-
-<main>
   <h1 id="welcomeText">مرحبًا بك في ShieldNet</h1>
   <p id="statusText">تم تسجيل الدخول بنجاح!</p>
-  <button id="logoutBtn">تسجيل الخروج</button>
-</main>
+  <button onclick="logout()">تسجيل الخروج</button>
 
-<script type="module" src="firebase.js"></script>
-<script type="module">
-  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <script type="module" src="firebase.js"></script>
+  <script type="module">
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const auth = window.firebaseAuth;
-  const db = getFirestore();
+    const auth = window.firebaseAuth;
+    const db = getFirestore();
 
-  const welcomeText = document.getElementById("welcomeText");
-  const statusText = document.getElementById("statusText");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const languageSelect = document.getElementById("languageSelect");
+    const welcomeText = document.getElementById("welcomeText");
+    const statusText = document.getElementById("statusText");
 
-  const translations = {
-    ar: {
-      welcome: "مرحبًا بك في ShieldNet",
-      status: "تم تسجيل الدخول بنجاح!",
-      logout: "تسجيل الخروج"
-    },
-    en: {
-      welcome: "Welcome to ShieldNet",
-      status: "You are logged in successfully!",
-      logout: "Logout"
-    },
-    fr: {
-      welcome: "Bienvenue sur ShieldNet",
-      status: "Connecté avec succès !",
-      logout: "Se déconnecter"
-    }
-  };
-
-  function applyLanguage(lang) {
-    if (!translations[lang]) lang = "ar"; // افتراضي للعربية
-    document.documentElement.lang = lang;
-    document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
-
-    welcomeText.textContent = translations[lang].welcome;
-    statusText.textContent = translations[lang].status;
-    logoutBtn.textContent = translations[lang].logout;
-    languageSelect.value = lang;
-  }
-
-  // تحميل اللغة المختارة من بيانات المستخدم من Firestore
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    try {
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-      const lang = userSnap.exists() ? userSnap.data().language : "ar";
-      applyLanguage(lang);
-    } catch {
-      applyLanguage("ar");
-    }
-  });
-
-  // تغيير اللغة من القائمة
-  languageSelect.addEventListener("change", async (e) => {
-    const lang = e.target.value;
-    applyLanguage(lang);
-    // حفظ التغيير في Firestore
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        await setDoc(userRef, { language: lang }, { merge: true });
-        console.log("✅ تم تحديث اللغة إلى:", lang);
+    function applyLanguage(lang) {
+      if (lang === "en") {
+        welcomeText.textContent = "Welcome to ShieldNet";
+        statusText.textContent = "Logged in successfully!";
+      } else if (lang === "fr") {
+        welcomeText.textContent = "Bienvenue sur ShieldNet";
+        statusText.textContent = "Connecté avec succès !";
+      } else {
+        welcomeText.textContent = "مرحبًا بك في ShieldNet";
+        statusText.textContent = "تم تسجيل الدخول بنجاح!";
       }
-    } catch (error) {
-      console.error("❌ خطأ تحديث اللغة:", error);
     }
-  });
 
-  // تسجيل الخروج
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      const lang = snap.exists() ? snap.data().language : "ar";
+      applyLanguage(lang);
     });
-  });
-</script>
 
+    window.logout = function () {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    };
+  </script>
 </body>
 </html>
