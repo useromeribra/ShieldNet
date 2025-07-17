@@ -1,124 +1,139 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة التحكم | ShieldNet</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background: linear-gradient(135deg, #4e54c8, #8f94fb);
-      margin: 0; padding: 0;
-      color: white;
-    }
-
-    header {
-      padding: 1rem 2rem;
-      background: rgba(0, 0, 0, 0.4);
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-      padding: 2rem;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1.5rem;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-      background-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .card h2 {
-      margin-bottom: 0.5rem;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 2rem;
-    }
-
-    button {
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 30px;
-      font-size: 1rem;
-      background-color: #f39c12;
-      color: #222;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #d78e10;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>لوحة المستخدم | ShieldNet</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    margin: 0; padding: 1rem;
+    color: white;
+    min-height: 100vh;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  h1 {
+    margin-bottom: 0.2rem;
+  }
+  .message {
+    font-weight: bold;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+  }
+  .safe-mode {
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+  }
+  .safe-mode h2 {
+    margin-top: 0;
+  }
+  .sites-list {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 0.5rem;
+  }
+  .sites-list label {
+    display: block;
+    cursor: pointer;
+    padding: 0.2rem 0;
+  }
+  button {
+    background-color: #f39c12;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #222;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-bottom: 1rem;
+  }
+  button:hover {
+    background-color: #d78e10;
+  }
+  .section {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+  }
+  .hidden {
+    display: none;
+  }
+  .assistants-status {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .idea-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .idea-list li {
+    margin-bottom: 0.5rem;
+  }
+</style>
 </head>
 <body>
 
-  <header>لوحة تحكم ShieldNet</header>
+<header>
+  <h1>مرحبًا بك في ShieldNet</h1>
+  <div class="message" id="motivationalMessage">أنت تستطيع 💪</div>
+  <button id="logoutBtn">تسجيل الخروج</button>
+</header>
 
-  <div class="container">
-    <div class="card" onclick="goTo('safe-page.html')">
-      <h2>🛡️ الوضع الآمن</h2>
-      <p>ادخل إلى بيئة خالية من المواقع الإباحية والخطر.</p>
+<main>
+
+  <!-- الوضع الآمن -->
+  <section class="safe-mode section">
+    <h2>الوضع الآمن - حجب المواقع</h2>
+    <p>اختر المواقع التي تريد حجبها:</p>
+    <div class="sites-list" id="sitesList">
+      <!-- المواقع ستُضاف هنا ديناميكياً -->
     </div>
+    <button id="selectAllSites">اختر الكل</button>
+    <button id="blockSitesBtn">احجب الآن</button>
+    <p><small>لن تستطيع رفع الحجب بعد الحظر!</small></p>
+  </section>
 
-    <div class="card" onclick="goTo('ai-coach.html')">
-      <h2>🧠 مساعد نايرا</h2>
-      <p>نايرا تساعدك في تطوير نفسك والنجاة من الإدمان.</p>
-    </div>
+  <!-- حالة المساعدين -->
+  <section class="assistants-status section">
+    <h2>حالة المساعدين</h2>
+    <p id="nairaStatus">نايرا: جاري التحميل...</p>
+    <p id="marketingKingStatus">ملك التسويق: جاري التحميل...</p>
+  </section>
 
-    <div class="card" onclick="goTo('ai-agents.html')">
-      <h2>📣 ملك التسويق</h2>
-      <p>انطلق بذكاء وسوّق نفسك أو مشروعك باحتراف.</p>
-    </div>
+  <!-- 30 فكرة دعم -->
+  <section class="ideas section">
+    <h2>أدوات الدعم الذكي</h2>
+    <ul class="idea-list" id="ideasList">
+      <!-- ستُضاف الأفكار هنا -->
+    </ul>
+  </section>
 
-    <div class="card" onclick="goTo('founder-dashboard.html')">
-      <h2>👑 المؤسس فقط</h2>
-      <p>لوحة خاصة للمؤسس لإدارة النظام بالكامل.</p>
-    </div>
-  </div>
+</main>
 
-  <div class="footer">
-    <button onclick="logout()">🔓 تسجيل الخروج</button>
-  </div>
+<script type="module" src="firebase.js"></script>
+<script type="module">
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <script type="module" src="firebase.js"></script>
-  <script type="module">
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  const auth = getAuth();
+  const db = getFirestore();
 
-    const auth = window.firebaseAuth;
-
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-      }
-    });
-
-    window.logout = function () {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    };
-
-    window.goTo = function (page) {
-      window.location.href = page;
-    };
-  </script>
-
-</body>
-</html>
+  const logoutBtn = document.getElementById('logoutBtn');
+  const motivationalMessage = document.getElementById('motivationalMessage');
+  const sitesList = document.getElementById('sitesList');
+  const selectAllSitesBtn = document.getElementById('selectAllSites');
+  const blockSitesBtn = document.getElementById('
