@@ -1,15 +1,62 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل الدخول | ShieldNet</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>تسجيل الدخول | ShieldNet</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    margin: 0; padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+  }
+  .container {
+    background: rgba(0,0,0,0.4);
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    max-width: 350px;
+    width: 90%;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 1rem;
+  }
+  select, input {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+  }
+  button {
+    width: 100%;
+    background-color: #f39c12;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #222;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #d78e10;
+  }
+</style>
 </head>
 <body>
-  <h1>تسجيل الدخول</h1>
 
-  <!-- اختيار اللغة -->
-  <label for="language">اختر اللغة:</label>
+<div class="container">
+  <h1 id="title">تسجيل الدخول</h1>
+
   <select id="language">
     <option value="ar">العربية</option>
     <option value="en">English</option>
@@ -17,38 +64,82 @@
   </select>
 
   <form id="loginForm">
-    <input type="email" id="email" placeholder="البريد الإلكتروني" required /><br />
-    <input type="password" id="password" placeholder="كلمة المرور" required /><br />
-    <button type="submit">دخول</button>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required />
+    <input type="password" id="password" placeholder="كلمة المرور" required />
+    <button type="submit" id="submitBtn">دخول</button>
   </form>
+</div>
 
-  <script type="module" src="firebase.js"></script>
-  <script type="module">
-    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<script type="module" src="firebase.js"></script>
+<script>
+  // ترجمة النصوص حسب اللغة
+  const translations = {
+    ar: {
+      title: "تسجيل الدخول",
+      emailPlaceholder: "البريد الإلكتروني",
+      passwordPlaceholder: "كلمة المرور",
+      submitBtn: "دخول"
+    },
+    en: {
+      title: "Login",
+      emailPlaceholder: "Email",
+      passwordPlaceholder: "Password",
+      submitBtn: "Login"
+    },
+    fr: {
+      title: "Connexion",
+      emailPlaceholder: "Email",
+      passwordPlaceholder: "Mot de passe",
+      submitBtn: "Connexion"
+    }
+  };
 
-    const auth = window.firebaseAuth;
-    const db = getFirestore();
+  const languageSelect = document.getElementById("language");
+  const title = document.getElementById("title");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const submitBtn = document.getElementById("submitBtn");
 
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const language = document.getElementById("language").value;
+  function updateTexts(lang) {
+    title.textContent = translations[lang].title;
+    emailInput.placeholder = translations[lang].emailPlaceholder;
+    passwordInput.placeholder = translations[lang].passwordPlaceholder;
+    submitBtn.textContent = translations[lang].submitBtn;
+  }
 
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+  languageSelect.addEventListener("change", (e) => {
+    updateTexts(e.target.value);
+  });
 
-        // تحديث اللغة في Firestore
-        await setDoc(doc(db, "users", user.uid), { language }, { merge: true });
+  // تعيين اللغة الافتراضية
+  updateTexts(languageSelect.value);
 
-        // توجه المستخدم للوحة التحكم
-        window.location.href = "dashboard.html";
-      } catch (error) {
-        alert("فشل تسجيل الدخول: " + error.message);
-      }
-    });
-  </script>
+  // باقي كود تسجيل الدخول باستخدام Firebase هنا ...
+  import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const auth = window.firebaseAuth;
+  const db = getFirestore();
+
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const language = languageSelect.value;
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // تحديث اللغة في Firestore
+      await setDoc(doc(db, "users", user.uid), { language }, { merge: true });
+
+      // توجيه المستخدم للوحة التحكم
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      alert("فشل تسجيل الدخول: " + error.message);
+    }
+  });
+</script>
 </body>
 </html>
