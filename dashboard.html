@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>نقاء | لوحة المتابعة</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #222;
+    margin: 0; padding: 20px;
+  }
+  header {
+    background: #0072ff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+  main {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+  .card {
+    background: #e7f0ff;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  button {
+    padding: 12px 25px;
+    background: #ffb300;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  button:hover {
+    background: #ffa000;
+  }
+</style>
+</head>
+<body>
+
+<header>نقاء - لوحة المتابعة</header>
+
+<main>
+  <div class="card">
+    <h2>عدد أيام النقاء</h2>
+    <p id="daysCount">0</p>
+  </div>
+
+  <div class="card">
+    <h2>رسالة اليوم</h2>
+    <p id="dailyMessage">... جارك الذكي سيذكرك بنيتك اليوم!</p>
+  </div>
+
+  <div class="card">
+    <h2>زر الطوارئ</h2>
+    <button id="panicBtn">اضغط هنا عند الشعور بالضعف</button>
+  </div>
+</main>
+
+<script>
+  // حساب الأيام منذ بداية النقاهة (مثال: 1 يوليو 2025)
+  const startDate = new Date("2025-07-01T00:00:00");
+  const today = new Date();
+  const diffTime = Math.abs(today - startDate);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  document.getElementById("daysCount").textContent = diffDays;
+
+  // رسالة يومية عشوائية محفزة
+  const messages = [
+    "كل يوم جديد هو فرصة جديدة للنقاء.",
+    "أنت أقوى مما تعتقد، استمر!",
+    "لا تستسلم، النجاح قريب.",
+    "تحكم في رغباتك، وحافظ على عزيمتك.",
+    "نقاء اليوم يبني مستقبلك الغد.",
+    "كل لحظة صمود هي انتصار.",
+  ];
+
+  function getRandomMessage() {
+    return messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  document.getElementById("dailyMessage").textContent = getRandomMessage();
+
+  // زر الطوارئ
+  document.getElementById("panicBtn").addEventListener("click", () => {
+    alert("تم تفعيل وضع الطوارئ! سيتم توجيهك إلى محتوى محفز سريع.");
+    // هنا يمكن إضافة تحويل لصفحة تحفيز أو تفعيل خاصية الطوارئ
+  });
+</script>
+
+</body>
+</html>
