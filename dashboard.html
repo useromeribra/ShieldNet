@@ -82,7 +82,7 @@
 <script type="module" src="firebase.js"></script>
 <script type="module">
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const auth = window.firebaseAuth;
   const db = getFirestore();
@@ -139,8 +139,20 @@
   });
 
   // تغيير اللغة من القائمة
-  languageSelect.addEventListener("change", (e) => {
-    applyLanguage(e.target.value);
+  languageSelect.addEventListener("change", async (e) => {
+    const lang = e.target.value;
+    applyLanguage(lang);
+    // حفظ التغيير في Firestore
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        await setDoc(userRef, { language: lang }, { merge: true });
+        console.log("✅ تم تحديث اللغة إلى:", lang);
+      }
+    } catch (error) {
+      console.error("❌ خطأ تحديث اللغة:", error);
+    }
   });
 
   // تسجيل الخروج
