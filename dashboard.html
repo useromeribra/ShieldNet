@@ -1,26 +1,70 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>لوحة التحكم | ShieldNet</title>
 </head>
 <body>
-  <h1>مرحبًا بك في ShieldNet</h1>
-  <p>تم تسجيل الدخول بنجاح!</p>
+  <h1 id="welcomeText">مرحبًا بك في ShieldNet</h1>
+  <p id="statusText">تم تسجيل الدخول بنجاح!</p>
   <button onclick="logout()">تسجيل الخروج</button>
+
   <script type="module" src="firebase.js"></script>
   <script type="module">
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const auth = window.firebaseAuth;
+    const db = getFirestore();
 
-    onAuthStateChanged(auth, (user) => {
+    const welcomeText = document.getElementById("welcomeText");
+    const statusText = document.getElementById("statusText");
+
+    // تغيير النصوص حسب اللغة
+    function applyLanguage(lang) {
+      if (lang === "en") {
+        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr";
+        welcomeText.textContent = "Welcome to ShieldNet";
+        statusText.textContent = "You are logged in successfully!";
+        document.querySelector("button").textContent = "Logout";
+      } else if (lang === "fr") {
+        document.documentElement.lang = "fr";
+        document.documentElement.dir = "ltr";
+        welcomeText.textContent = "Bienvenue sur ShieldNet";
+        statusText.textContent = "Connecté avec succès !";
+        document.querySelector("button").textContent = "Se déconnecter";
+      } else {
+        // Default: Arabic
+        document.documentElement.lang = "ar";
+        document.documentElement.dir = "rtl";
+        welcomeText.textContent = "مرحبًا بك في ShieldNet";
+        statusText.textContent = "تم تسجيل الدخول بنجاح!";
+        document.querySelector("button").textContent = "تسجيل الخروج";
+      }
+    }
+
+    // التحقق من حالة المستخدم وجلب اللغة
+    onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "login.html";
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        const lang = data.language || "ar";
+        applyLanguage(lang);
+      } else {
+        applyLanguage("ar");
       }
     });
 
+    // تسجيل الخروج
     window.logout = function () {
       signOut(auth).then(() => {
         window.location.href = "login.html";
