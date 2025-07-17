@@ -71,7 +71,7 @@
 </div>
 
 <script type="module" src="firebase.js"></script>
-<script>
+<script type="module">
   // ترجمة النصوص حسب اللغة
   const translations = {
     ar: {
@@ -114,7 +114,6 @@
   // تعيين اللغة الافتراضية
   updateTexts(languageSelect.value);
 
-  // كود تسجيل الدخول باستخدام Firebase
   import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -123,7 +122,7 @@
 
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = emailInput.value;
+    const email = emailInput.value.trim();
     const password = passwordInput.value;
     const language = languageSelect.value;
 
@@ -145,5 +144,6 @@
     }
   });
 </script>
+
 </body>
 </html>
