@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>إنشاء حساب | نقاء</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a237e, #3949ab, #5c6bc0);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+    .signup-container {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      width: 340px;
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 14px 15px;
+      margin: 12px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #ffd700;
+      border: none;
+      padding: 14px 0;
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      color: #222;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #ffca00;
+    }
+    .login-link {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #eee;
+    }
+    .login-link a {
+      color: #ffd700;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="signup-container">
+  <h1>إنشاء حساب جديد</h1>
+  <form>
+    <input type="text" placeholder="الاسم الكامل" required />
+    <input type="email" placeholder="البريد الإلكتروني" required />
+    <input type="password" placeholder="كلمة المرور" required />
+    <button type="submit">تسجيل</button>
+  </form>
+  <p class="login-link">هل لديك حساب؟ <a href="login.html">تسجيل الدخول</a></p>
+</div>
+
+</body>
+</html>
