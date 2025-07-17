@@ -1,111 +1,258 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة المؤسس | ShieldNet</title>
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-      direction: rtl;
-    }
-    h1 {
-      color: #2c3e50;
-    }
-    .section {
-      background: white;
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    #chatLog {
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin-top: 10px;
-      background: #fafafa;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>لوحة تحكم المؤسس | ShieldNet</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    margin: 0; padding: 0;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  }
+  main {
+    width: 90%;
+    max-width: 800px;
+    margin-top: 2rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+  }
+  h1, h2 {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  label, button {
+    display: block;
+    margin: 1rem auto;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  input[type="password"] {
+    width: 250px;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: none;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  button {
+    background-color: #f39c12;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    color: #222;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #d78e10;
+  }
+  .info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .toggle-btn {
+    margin: 0.5rem auto;
+    padding: 0.6rem 1.5rem;
+    border-radius: 30px;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
 </head>
 <body>
-  <h1>🧠 أهلاً بك يا مؤسس ShieldNet!</h1>
-  <p>لوحتك الحصرية للتحكم الكامل.</p>
 
-  <!-- قسم نايرا -->
-  <div class="section">
-    <h2>👩‍💻 نايرا - مساعد التطوير</h2>
-    <input type="text" id="nayraInput" placeholder="اكتب أمر أو فكرة..." style="width: 80%;" />
-    <button onclick="sendToNayra()">أرسل لنايرا</button>
-    <div id="chatLog"></div>
+<header>
+  <h1>لوحة تحكم المؤسس</h1>
+  <p class="info">الهدف: بناء مجتمع خالي من الإدمان | الرسالة: أنت تستطيع 💪</p>
+</header>
+
+<main>
+  <div id="authSection">
+    <label for="founderPass">أدخل كلمة مرور المؤسس:</label>
+    <input type="password" id="founderPass" placeholder="كلمة المرور" autocomplete="new-password" />
+    <button id="authBtn">دخول</button>
+    <p id="authMsg" style="color:#f39c12;"></p>
   </div>
 
-  <!-- قسم ملك التسويق -->
-  <div class="section">
-    <h2>📢 ملك التسويق</h2>
-    <button onclick="startMarketing()">ابدأ النشر الآن</button>
-    <div id="marketingStatus" style="margin-top: 10px;"></div>
+  <div id="dashboardContent" class="hidden">
+    <h2>مرحبًا بك يا مؤسس ShieldNet</h2>
+
+    <p>عدد المستخدمين المسجلين: <span id="userCount">جاري التحميل...</span></p>
+
+    <button id="toggleNaira" class="toggle-btn">تشغيل نايرا (المساعد النفسي)</button>
+    <button id="toggleMarketingKing" class="toggle-btn">تشغيل ملك التسويق</button>
+
+    <label for="changePassInput">تغيير كلمة مرور دخول المؤسس:</label>
+    <input type="password" id="changePassInput" placeholder="كلمة المرور الجديدة" autocomplete="new-password" />
+    <button id="changePassBtn">تغيير كلمة المرور</button>
+
+    <button id="logoutBtn" style="margin-top:2rem;">تسجيل الخروج</button>
   </div>
+</main>
 
-  <button onclick="logout()">🔓 تسجيل الخروج</button>
+<script type="module" src="firebase.js"></script>
+<script type="module">
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  <!-- Firebase auth -->
-  <script type="module" src="firebase.js"></script>
-  <script type="module">
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  const auth = getAuth();
+  const db = getFirestore();
 
-    const auth = window.firebaseAuth;
-    const founderEmail = "founder@shieldnet.com"; // 🔒 استبدل بإيميلك الرسمي
+  const founderPassInput = document.getElementById('founderPass');
+  const authBtn = document.getElementById('authBtn');
+  const authMsg = document.getElementById('authMsg');
+  const dashboardContent = document.getElementById('dashboardContent');
+  const authSection = document.getElementById('authSection');
 
-    onAuthStateChanged(auth, (user) => {
-      if (!user || user.email !== founderEmail) {
-        window.location.href = "dashboard.html";
+  const userCountSpan = document.getElementById('userCount');
+  const toggleNairaBtn = document.getElementById('toggleNaira');
+  const toggleMarketingBtn = document.getElementById('toggleMarketingKing');
+  const changePassInput = document.getElementById('changePassInput');
+  const changePassBtn = document.getElementById('changePassBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // كلمة المرور الأساسية للمؤسس
+  let founderPassword = localStorage.getItem('founderPassword') || 'usertheking';
+
+  // تحقق من تسجيل الدخول Firebase
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      authMsg.textContent = 'يرجى تسجيل الدخول أولاً بحساب مؤسس Firebase.';
+      disableDashboard();
+      return;
+    }
+    if (user.email !== 'founder@shieldnet.com') {
+      authMsg.textContent = 'غير مخول بالدخول إلى لوحة المؤسس.';
+      disableDashboard();
+      return;
+    }
+    // إبقاء قسم المصادقة مرئي حتى كلمة المرور صحيحة
+    enableAuthCheck();
+  });
+
+  // تمكين/تعطيل لوحة المحتوى
+  function enableAuthCheck() {
+    authSection.style.display = 'block';
+    dashboardContent.style.display = 'none';
+  }
+  function disableDashboard() {
+    authSection.style.display = 'none';
+    dashboardContent.style.display = 'none';
+  }
+
+  // التحقق من كلمة المرور للمؤسس
+  authBtn.addEventListener('click', () => {
+    if (founderPassInput.value === founderPassword) {
+      // إظهار لوحة المؤسس
+      authSection.style.display = 'none';
+      dashboardContent.style.display = 'block';
+      authMsg.textContent = '';
+      loadUserCount();
+      loadAssistantsStatus();
+    } else {
+      authMsg.textContent = 'كلمة المرور غير صحيحة!';
+    }
+  });
+
+  // تحميل عدد المستخدمين من Firestore
+  async function loadUserCount() {
+    try {
+      const usersCol = collection(db, "users");
+      const snapshot = await getDocs(usersCol);
+      userCountSpan.textContent = snapshot.size;
+    } catch (e) {
+      userCountSpan.textContent = "خطأ في جلب البيانات";
+      console.error(e);
+    }
+  }
+
+  // تحميل حالة نايرا وملك التسويق من Firestore
+  async function loadAssistantsStatus() {
+    try {
+      const docRef = doc(db, "adminSettings", "assistantsStatus");
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        updateToggleButtons(data);
+      } else {
+        // إعدادات افتراضية
+        updateToggleButtons({ naira: false, marketingKing: false });
       }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function updateToggleButtons(data) {
+    toggleNairaBtn.textContent = data.naira ? "إيقاف نايرا (المساعد النفسي)" : "تشغيل نايرا (المساعد النفسي)";
+    toggleMarketingBtn.textContent = data.marketingKing ? "إيقاف ملك التسويق" : "تشغيل ملك التسويق";
+  }
+
+  // تبديل حالة نايرا
+  toggleNairaBtn.addEventListener('click', async () => {
+    try {
+      const docRef = doc(db, "adminSettings", "assistantsStatus");
+      const currentStatus = toggleNairaBtn.textContent.includes("إيقاف");
+      await setDoc(docRef, { naira: !currentStatus }, { merge: true });
+      toggleNairaBtn.textContent = !currentStatus ? "إيقاف نايرا (المساعد النفسي)" : "تشغيل نايرا (المساعد النفسي)";
+    } catch (e) {
+      alert("حدث خطأ أثناء تحديث حالة نايرا");
+      console.error(e);
+    }
+  });
+
+  // تبديل حالة ملك التسويق
+  toggleMarketingBtn.addEventListener('click', async () => {
+    try {
+      const docRef = doc(db, "adminSettings", "assistantsStatus");
+      const currentStatus = toggleMarketingBtn.textContent.includes("إيقاف");
+      await setDoc(docRef, { marketingKing: !currentStatus }, { merge: true });
+      toggleMarketingBtn.textContent = !currentStatus ? "إيقاف ملك التسويق" : "تشغيل ملك التسويق";
+    } catch (e) {
+      alert("حدث خطأ أثناء تحديث حالة ملك التسويق");
+      console.error(e);
+    }
+  });
+
+  // تغيير كلمة مرور المؤسس
+  changePassBtn.addEventListener('click', () => {
+    const newPass = changePassInput.value.trim();
+    if (newPass.length < 6) {
+      alert("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+      return;
+    }
+    founderPassword = newPass;
+    localStorage.setItem('founderPassword', newPass);
+    alert("تم تغيير كلمة مرور المؤسس بنجاح");
+    changePassInput.value = "";
+  });
+
+  // تسجيل الخروج
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
     });
+  });
 
-    window.logout = function () {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    };
-
-    // 🧠 نايرا
-    window.sendToNayra = function () {
-      const input = document.getElementById("nayraInput").value.trim();
-      if (!input) return;
-
-      const reply = `💡 نايرا: تحليل الأمر "${input}"... ✅ التنفيذ قيد الدراسة...`;
-      const log = document.getElementById("chatLog");
-      const msg = document.createElement("div");
-      msg.textContent = reply;
-      log.appendChild(msg);
-      document.getElementById("nayraInput").value = "";
-    };
-
-    // 📢 ملك التسويق
-    window.startMarketing = function () {
-      const status = document.getElementById("marketingStatus");
-      status.innerHTML = "🚀 جاري النشر إلى فيسبوك، تويتر، إنستغرام، تيك توك...";
-
-      setTimeout(() => {
-        status.innerHTML += "<br>📣 تم نشر 200 إعلان ذكي بنجاح! 🎯";
-      }, 3000);
-    };
-  </script>
+</script>
 </body>
 </html>
