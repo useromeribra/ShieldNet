@@ -1,85 +1,46 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>إنشاء حساب | ShieldNet</title>
-<style>
-  body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #4e54c8, #8f94fb);
-    margin: 0; padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    color: white;
-  }
-  .container {
-    background: rgba(0,0,0,0.4);
-    padding: 2rem 3rem;
-    border-radius: 12px;
-    max-width: 350px;
-    width: 90%;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    text-align: center;
-  }
-  h1 {
-    margin-bottom: 1rem;
-  }
-  input, button {
-    width: 100%;
-    padding: 0.6rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-  }
-  button {
-    background-color: #f39c12;
-    cursor: pointer;
-    color: #222;
-    font-weight: bold;
-    border-radius: 30px;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
-  }
-  button:hover {
-    background-color: #d78e10;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إنشاء حساب | ShieldNet</title>
 </head>
 <body>
-
-<div class="container">
-  <h1>إنشاء حساب جديد</h1>
-
+  <h1>إنشاء حساب</h1>
   <form id="signupForm">
-    <input type="email" id="email" placeholder="البريد الإلكتروني" autocomplete="off" required />
-    <input type="password" id="password" placeholder="كلمة المرور" autocomplete="new-password" required />
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required /><br>
+    <input type="password" id="password" placeholder="كلمة المرور" required /><br>
+    <select id="language">
+      <option value="ar">العربية</option>
+      <option value="en">English</option>
+      <option value="fr">Français</option>
+    </select><br>
     <button type="submit">تسجيل</button>
   </form>
-</div>
 
-<script type="module" src="firebase.js"></script>
-<script type="module">
-  import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  <script type="module" src="firebase.js"></script>
+  <script type="module">
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const auth = window.firebaseAuth;
+    const auth = window.firebaseAuth;
+    const db = getFirestore();
 
-  document.getElementById("signupForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const language = document.getElementById("language").value;
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      alert("✅ تم التسجيل بنجاح! سيتم توجيهك الآن.");
-      window.location.href = "dashboard.html";
-    } catch (error) {
-      alert("❌ فشل التسجيل: " + error.message);
-    }
-  });
-</script>
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        await setDoc(doc(db, "users", user.uid), { language });
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        alert("فشل التسجيل: " + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
