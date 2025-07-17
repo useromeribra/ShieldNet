@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نقاء | بداية رحلتك نحو النقاء</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    }
+    p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      line-height: 1.5;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    select, button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    select {
+      margin-bottom: 1.5rem;
+      background-color: #0057b7;
+      color: #fff;
+    }
+    select:hover {
+      background-color: #004a9e;
+    }
+    button {
+      background-color: #ffb300;
+      color: #000;
+      font-weight: 700;
+      box-shadow: 0 5px 15px rgba(255,179,0,0.7);
+    }
+    button:hover {
+      background-color: #ffa000;
+    }
+    footer {
+      position: fixed;
+      bottom: 15px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      width: 100%;
+      text-align: center;
+      color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">Niqaa - Your Journey to Purity</h1>
+  <p id="subtitle">Start your path today. Freedom begins with a single step.</p>
+
+  <select id="langSelector" aria-label="Select Language">
+    <option value="en">English</option>
+    <option value="ar">العربية</option>
+    <option value="es">Español</option>
+    <option value="fr">Français</option>
+    <option value="tr">Türkçe</option>
+    <option value="de">Deutsch</option>
+    <option value="zh">中文</option>
+    <option value="ru">Русский</option>
+    <option value="id">Bahasa Indonesia</option>
+    <option value="ur">اردو</option>
+    <option value="bn">বাংলা</option>
+    <option value="fa">فارسی</option>
+    <option value="ja">日本語</option>
+    <option value="pt">Português</option>
+    <option value="ko">한국어</option>
+    <option value="it">Italiano</option>
+    <option value="nl">Nederlands</option>
+    <option value="th">ไทย</option>
+    <option value="vi">Tiếng Việt</option>
+    <option value="he">עברית</option>
+  </select>
+
+  <button id="startBtn">Start Now</button>
+
+  <footer>© 2025 Niqaa Project - Powered by AI &amp; Your Will</footer>
+
+  <script>
+    // Translations object
+    const translations = {
+      en: {
+        title: "Niqaa - Your Journey to Purity",
+        subtitle: "Start your path today. Freedom begins with a single step.",
+        startBtn: "Start Now"
+      },
+      ar: {
+        title: "نقاء - بداية رحلتك نحو النقاء",
+        subtitle: "ابدأ طريقك اليوم. الحرية تبدأ بخطوة واحدة.",
+        startBtn: "ابدأ الآن"
+      },
+      es: {
+        title: "Niqaa - Tu viaje hacia la pureza",
+        subtitle: "Comienza tu camino hoy. La libertad comienza con un solo paso.",
+        startBtn: "Comenzar ahora"
+      },
+      fr: {
+        title: "Niqaa - Votre chemin vers la pureté",
+        subtitle: "Commencez votre chemin aujourd'hui. La liberté commence par un seul pas.",
+        startBtn: "Commencer maintenant"
+      },
+      tr: {
+        title: "Niqaa - Saflığa Yolculuğunuz",
+        subtitle: "Yolunuza bugün başlayın. Özgürlük tek bir adımla başlar.",
+        startBtn: "Şimdi Başla"
+      },
+      de: {
+        title: "Niqaa - Deine Reise zur Reinheit",
+        subtitle: "Beginne heute deinen Weg. Freiheit beginnt mit einem einzigen Schritt.",
+        startBtn: "Jetzt starten"
+      },
+      zh: {
+        title: "Niqaa - 走向纯净的旅程",
+        subtitle: "今天开始你的道路。自由始于第一步。",
+        startBtn: "立即开始"
+      },
+      ru: {
+        title: "Niqaa - Ваш путь к чистоте",
+        subtitle: "Начните свой путь сегодня. Свобода начинается с одного шага.",
+        startBtn: "Начать сейчас"
+      },
+      id: {
+        title: "Niqaa - Perjalananmu Menuju Kesucian",
+        subtitle: "Mulailah jalanmu hari ini. Kebebasan dimulai dengan satu langkah.",
+        startBtn: "Mulai Sekarang"
+      },
+      ur: {
+        title: "Niqaa - آپ کی پاکیزگی کا سفر",
+        subtitle: "آج ہی اپنا راستہ شروع کریں۔ آزادی ایک قدم سے شروع ہوتی ہے۔",
+        startBtn: "اب شروع کریں"
+      },
+      bn: {
+        title: "Niqaa - আপনার পবিত্রতার যাত্রা",
+        subtitle: "আজই আপনার পথ শুরু করুন। স্বাধীনতা এক ধাপ দিয়ে শুরু হয়।",
+        startBtn: "এখন শুরু করুন"
+      },
+      fa: {
+        title: "Niqaa - سفر شما به سوی پاکی",
+        subtitle: "امروز مسیر خود را آغاز کنید. آزادی با یک قدم شروع می‌شود.",
+        startBtn: "اکنون شروع کنید"
+      },
+      ja: {
+        title: "Niqaa - 純粋への旅",
+        subtitle: "今日から旅を始めましょう。自由は一歩から始まる。",
+        startBtn: "今すぐ始める"
+      },
+      pt: {
+        title: "Niqaa - Sua Jornada para a Pureza",
+        subtitle: "Comece seu caminho hoje. A liberdade começa com um único passo.",
+        startBtn: "Começar agora"
+      },
+      ko: {
+        title: "Niqaa - 순수로 가는 여정",
+        subtitle: "오늘 당신의 길을 시작하세요. 자유는 한 걸음에서 시작됩니다.",
+        startBtn: "지금 시작하기"
+      },
+      it: {
+        title: "Niqaa - Il tuo viaggio verso la purezza",
+        subtitle: "Inizia oggi il tuo cammino. La libertà inizia con un solo passo.",
+        startBtn: "Inizia ora"
+      },
+      nl: {
+        title: "Niqaa - Jouw reis naar zuiverheid",
+        subtitle: "Begin vandaag aan je pad. Vrijheid begint met één stap.",
+        startBtn: "Begin nu"
+      },
+      th: {
+        title: "Niqaa - การเดินทางสู่ความบริสุทธิ์ของคุณ",
+        subtitle: "เริ่มต้นเส้นทางของคุณวันนี้ อิสรภาพเริ่มต้นด้วยก้าวเดียว",
+        startBtn: "เริ่มตอนนี้"
+      },
+      vi: {
+        title: "Niqaa - Hành trình đến sự thanh khiết",
+        subtitle: "Bắt đầu con đường của bạn hôm nay. Tự do bắt đầu từ một bước.",
+        startBtn: "Bắt đầu ngay"
+      },
+      he: {
+        title: "Niqaa - המסע שלך לטוהר",
+        subtitle: "התחל את דרכך היום. החופש מתחיל בצעד אחד.",
+        startBtn: "התחל עכשיו"
+      }
+    };
+
+    const langSelector = document.getElementById("langSelector");
+    const titleEl = document.getElementById("title");
+    const subtitleEl = document.getElementById("subtitle");
+    const startBtn = document.getElementById("startBtn");
+
+    // Load language from localStorage or browser default
+    function getDefaultLang() {
+      const savedLang = localStorage.getItem("niqaa_lang");
+      if (savedLang && translations[savedLang]) return savedLang;
+      const browserLang = navigator.language.slice(0,2);
+      return translations[browserLang] ? browserLang : "en";
+    }
+
+    function setLanguage(lang) {
+      const t = translations[lang] || translations["en"];
+      titleEl.textContent = t.title;
+      subtitleEl.textContent = t.subtitle;
+      startBtn.textContent = t.startBtn;
+      langSelector.value = lang;
+      localStorage.setItem("niqaa_lang", lang);
+      document.documentElement.lang = lang;
+      // For RTL languages like Arabic, Hebrew
+      if (lang === "ar" || lang === "he" || lang === "ur" || lang === "fa") {
+        document.body.style.direction = "rtl";
+      } else {
+        document.body.style.direction = "ltr";
+      }
+    }
+
+    langSelector.addEventListener("change", e => {
+      setLanguage(e.target.value);
+    });
+
+    // Initialize
+    setLanguage(getDefaultLang());
+
+    // Start button handler
+    startBtn.addEventListener("click", () => {
+      alert("This will navigate to the user dashboard (not yet implemented).");
+      // Here you would navigate to dashboard.html or similar
+      // window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>
