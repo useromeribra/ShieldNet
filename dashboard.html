@@ -3,142 +3,99 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة المستخدم | ShieldNet</title>
+  <title>لوحة تحكم المستخدم | ShieldNet</title>
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #4e54c8, #8f94fb);
       margin: 0; padding: 0;
+      color: white;
       display: flex;
       flex-direction: column;
-      align-items: center;
       min-height: 100vh;
-      color: white;
     }
     header {
-      width: 100%;
       background: rgba(0,0,0,0.5);
       padding: 1rem 2rem;
       text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      font-size: 1.4rem;
+      font-weight: bold;
     }
     main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 90%;
-      max-width: 600px;
+    }
+    .card {
+      background: rgba(255,255,255,0.1);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
       text-align: center;
-    }
-    h1 {
-      margin-bottom: 0.5rem;
-    }
-    p {
-      margin-top: 0;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-    }
-    button {
-      background-color: #f39c12;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 30px;
-      font-size: 1.1rem;
+      transition: transform 0.2s ease;
       cursor: pointer;
-      color: #222;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
     }
-    button:hover {
-      background-color: #d78e10;
+    .card:hover {
+      transform: scale(1.03);
     }
-    ul {
-      list-style: none;
-      padding: 0;
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      position: relative;
     }
-    li {
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
+    #secretEntry {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.3;
+    }
+    #secretEntry:hover {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>مرحبًا بك في ShieldNet</h1>
-</header>
+  <header>
+    مرحبًا بك في ShieldNet 💙 أنت تستطيع 💪
+  </header>
 
-<main>
-  <p>أنت الآن في أمان مع مساعدك <strong>حارس النور</strong> 🛡️</p>
-  <ul id="ideasList"></ul>
-  <button onclick="logout()">تسجيل الخروج</button>
-</main>
+  <main>
+    <div class="card">سجل النقاء</div>
+    <div class="card">زر "أنا ضعفت"</div>
+    <div class="card">قائمة المحفزات</div>
+    <div class="card">عداد الوقت</div>
+    <div class="card">رسائل تشجيعية</div>
+    <div class="card">صفحة أنقذ حياتي</div>
+    <div class="card">زر نقي الآن</div>
+    <div class="card">توصيات مخصصة</div>
+    <div class="card">تحديات يومية</div>
+    <div class="card">تحليل الانتكاسات</div>
+    <div class="card">جلسات تأمل</div>
+    <div class="card">مجتمع ShieldNet</div>
+  </main>
 
-<script type="module" src="firebase.js"></script>
-<script type="module">
-  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <footer>
+    ShieldNet © 2025
+    <div id="secretEntry" title="دخول المؤسس">⚙️</div>
+  </footer>
 
-  const auth = window.firebaseAuth;
-  const db = getFirestore();
-
-  // تحقق من الدخول
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = "login.html";
-    }
-  });
-
-  // تسجيل الخروج
-  window.logout = function () {
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
+  <script>
+    const secret = document.getElementById("secretEntry");
+    secret.addEventListener("click", () => {
+      const input = prompt("🔐 أدخل كلمة مرور المؤسس:");
+      if (input === "usertheking") {
+        window.location.href = "founder-dashboard.html";
+      } else {
+        alert("❌ كلمة المرور غير صحيحة.");
+      }
     });
-  }
-
-  // تحميل الأفكار المساعدة
-  const ideas = [
-    "سجل النقاء",
-    "زر أنا ضعفت",
-    "قائمة المحفزات",
-    "عداد الوقت",
-    "رسائل تشجيعية",
-    "صفحة أنقذ حياتي",
-    "شارك انتصارك",
-    "تذكيرات الصلاة والرياضة",
-    "حجب ذكي",
-    "تحليل الانتكاسات",
-    "وضع أنا مشغول",
-    "كتب ومقاطع تحفيز",
-    "مجتمع الدعم",
-    "جلسات تأمل",
-    "رفيق افتراضي",
-    "تحديات يومية",
-    "نظام نقاط",
-    "ربط بمدرب حقيقي",
-    "صفحة الهدف",
-    "مقارنة الحياة",
-    "دعم AI احترافي",
-    "نادي الناجين",
-    "زر نقي الآن",
-    "مراقبة الوقت",
-    "رسوم تطورك",
-    "توصيات حسب حالتك",
-    "حجب التطبيقات",
-    "نظام فوز أسبوعي",
-    "واجهة تحفيزية",
-    "خريطة طريق للتعافي"
-  ];
-
-  const ideasList = document.getElementById("ideasList");
-  ideas.forEach(idea => {
-    const li = document.createElement("li");
-    li.textContent = "🔹 " + idea;
-    ideasList.appendChild(li);
-  });
-</script>
+  </script>
 
 </body>
 </html>
