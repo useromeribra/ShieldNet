@@ -3,132 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة المستخدم | ShieldNet</title>
+  <title>لوحة تحكم ShieldNet</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #4e54c8, #8f94fb);
+      background: #121212;
+      color: #fff;
       margin: 0;
       padding: 0;
-      color: white;
     }
     header {
-      background: rgba(0,0,0,0.5);
+      background: #1f1f1f;
       padding: 1rem 2rem;
-      text-align: center;
-      font-size: 1.4rem;
-      font-weight: bold;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
     }
     main {
       padding: 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
     }
-    .card {
-      background: rgba(0,0,0,0.3);
-      padding: 1.2rem;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      text-align: center;
-      transition: transform 0.3s ease;
+    .section {
+      background: #222;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .section h2 {
+      margin-top: 0;
+    }
+    .btn {
+      background-color: #f39c12;
+      color: #000;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      border-radius: 6px;
       cursor: pointer;
     }
-    .card:hover {
-      transform: scale(1.05);
-      background: rgba(0,0,0,0.5);
+    .btn:hover {
+      background-color: #d78e10;
     }
-    .card h3 {
-      margin: 0.5rem 0;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: rgba(0,0,0,0.2);
-      font-size: 1rem;
-      margin-top: 2rem;
+    .idea-list li {
+      padding: 0.25rem 0;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>مرحبًا بك في ShieldNet</h1>
+    <button id="adminAccess" class="btn">⚙️</button>
+  </header>
 
-<header>
-  مرحبًا بك في ShieldNet 💙 | أنت تستطيع 💪
-</header>
+  <main>
+    <div class="section">
+      <h2>أدوات التعافي</h2>
+      <button class="btn" onclick="openIdea('أنا ضعفت')">زر أنا ضعفت</button>
+      <button class="btn" onclick="openIdea('سجل النقاء')">سجل النقاء</button>
+      <button class="btn" onclick="openIdea('صفحة أنقذ حياتي')">أنقذ حياتي</button>
+      <button class="btn" onclick="openAIHelper()">جلسة دعم ذكي</button>
+    </div>
 
-<main>
-  <div class="card" onclick="location.href='safe-page.html'">
-    <h3>الوضع الآمن 🔒</h3>
-    <p>حجب المواقع السيئة نهائيًا</p>
-  </div>
+    <div class="section">
+      <h2>الوضع الآمن</h2>
+      <p>اختر المواقع السيئة التي تريد حجبها</p>
+      <button class="btn" onclick="activateSafeMode()">🔒 تفعيل الحماية</button>
+    </div>
 
-  <div class="card" onclick="location.href='ai-coach.html'">
-    <h3>حارس النور 🧠</h3>
-    <p>مساعد AI للتعافي النفسي</p>
-  </div>
+    <div class="section">
+      <h2>خطة التعافي المقترحة</h2>
+      <ul id="ideas" class="idea-list"></ul>
+    </div>
+  </main>
 
-  <div class="card" onclick="location.href='ai-agents.html'">
-    <h3>جلسة الدعم الذكي</h3>
-    <p>تحدث مع AI لو كنت ضعفت</p>
-  </div>
+  <script type="module">
+    import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
-  <div class="card" onclick="showIdeas()">
-    <h3>أدوات التعافي 💡</h3>
-    <p>30 أداة لتحسين حياتك</p>
-  </div>
+    const auth = window.firebaseAuth;
+    const db = getFirestore();
 
-  <!-- زر الدخول السري للمؤسس -->
-  <div class="card" onclick="accessFounder()">
-    <h3>⚙️ إعدادات متقدمة</h3>
-    <p>خاص بالمؤسس فقط</p>
-  </div>
-</main>
+    const ideas = [
+      "سجل النقاء", "زر أنا ضعفت", "قائمة المحفزات", "عداد الوقت", "رسائل تشجيعية",
+      "صفحة أنقذ حياتي", "شارك انتصارك", "تذكيرات الصلاة والرياضة", "حجب ذكي",
+      "تحليل الانتكاسات", "وضع أنا مشغول", "كتب ومقاطع تحفيز", "مجتمع الدعم",
+      "جلسات تأمل", "رفيق افتراضي", "تحديات يومية", "نظام نقاط", "ربط بمدرب حقيقي",
+      "صفحة الهدف", "مقارنة الحياة", "دعم AI احترافي", "نادي الناجين", "زر نقي الآن",
+      "مراقبة الوقت", "رسوم تطورك", "توصيات حسب حالتك", "حجب التطبيقات",
+      "نظام فوز أسبوعي", "واجهة تحفيزية", "خريطة طريق للتعافي"
+    ];
 
-<!-- قائمة الأفكار -->
-<div id="ideasSection" style="display:none; padding: 2rem;">
-  <h2>أدوات تساعدك على التعافي:</h2>
-  <ul id="ideasList" style="line-height: 2;"></ul>
-</div>
-
-<footer>
-  ShieldNet © 2025 – لحياة أرقى وأنقى 🌱
-</footer>
-
-<script type="module" src="firebase.js"></script>
-<script type="module">
-  const ideas = [
-    "سجل النقاء", "زر أنا ضعفت", "قائمة المحفزات", "عداد الوقت", "رسائل تشجيعية",
-    "صفحة أنقذ حياتي", "شارك انتصارك", "تذكيرات الصلاة والرياضة", "حجب ذكي",
-    "تحليل الانتكاسات", "وضع أنا مشغول", "كتب ومقاطع تحفيز", "مجتمع الدعم",
-    "جلسات تأمل", "رفيق افتراضي", "تحديات يومية", "نظام نقاط", "ربط بمدرب حقيقي",
-    "صفحة الهدف", "مقارنة الحياة", "دعم AI احترافي", "نادي الناجين", "زر نقي الآن",
-    "مراقبة الوقت", "رسوم تطورك", "توصيات حسب حالتك", "حجب التطبيقات",
-    "نظام فوز أسبوعي", "واجهة تحفيزية", "خريطة طريق للتعافي"
-  ];
-
-  window.showIdeas = function () {
-    const ideasSection = document.getElementById("ideasSection");
-    const ideasList = document.getElementById("ideasList");
-    ideasSection.style.display = "block";
-    ideasList.innerHTML = "";
-    ideas.forEach(text => {
+    const ideasList = document.getElementById("ideas");
+    ideas.forEach((i) => {
       const li = document.createElement("li");
-      li.textContent = "🔹 " + text;
+      li.textContent = "🔹 " + i;
       ideasList.appendChild(li);
     });
-    window.scrollTo(0, document.body.scrollHeight);
-  }
 
-  window.accessFounder = function () {
-    const pass = prompt("أدخل كلمة المرور الخاصة بالمؤسس:");
-    if (pass === "usertheking") {
-      window.location.href = "founder-dashboard.html";
-    } else {
-      alert("كلمة مرور خاطئة ❌");
-    }
-  }
-</script>
+    // وظائف الأزرار
+    window.openIdea = (ideaName) => {
+      alert("🌟 سيتم تنفيذ: " + ideaName + " لاحقًا كميزة تفاعلية");
+    };
 
+    window.activateSafeMode = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      await setDoc(doc(db, "users", user.uid), {
+        blockedSites: ["site1.com", "site2.com", "site3.com"],
+        blockLocked: true
+      }, { merge: true });
+      alert("✅ تم تفعيل الوضع الآمن بنجاح!");
+    };
+
+    window.openAIHelper = () => {
+      window.location.href = "ai-helper.html";
+    };
+
+    document.getElementById("adminAccess").addEventListener("click", () => {
+      const pass = prompt("أدخل كلمة المرور الخاصة بالمؤسس:");
+      if (pass === "usertheking") {
+        window.location.href = "founder-dashboard.html";
+      } else {
+        alert("❌ كلمة المرور خاطئة");
+      }
+    });
+
+    // حماية تسجيل الدخول
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "login.html";
+    });
+  </script>
 </body>
 </html>
